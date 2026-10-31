@@ -5,7 +5,6 @@ Stack Overflow Python Q&A. The goal is not just to train a model, but to **rigor
 whether fine-tuning actually improves answer quality over the base model** — with a proper
 held-out set, base-vs-tuned comparison, and three complementary metrics.
 
----
 
 ## Project Overview
 
@@ -23,7 +22,6 @@ The project delivers:
 - A base-vs-tuned evaluation on a 20% held-out split, using **ROUGE-L**, **token-level F1**,
   and **perplexity** on the reference answers, plus per-sample scatter analysis.
 
----
 
 ## Motivation
 
@@ -35,7 +33,7 @@ I wanted to build the full loop myself: from raw web data, through cleaning, thr
 parameter-efficient training, to a defensible evaluation. The last step is what most
 portfolio projects skip, and it's the one that matters most.
 
----
+
 
 ## Data Pipeline
 
@@ -61,7 +59,7 @@ prompt is masked with `-100` in the label tensor. This is the correct way to fin
 instruct models; without it, the model learns to generate the system prompt and the user's
 question verbatim, which wastes capacity and degrades quality.
 
----
+
 
 ## Model and Training
 
@@ -103,7 +101,7 @@ and optimizer states on a 12GB card.
   short titles) plus answer exceeds this, the answer gets truncated and the sample is
   skipped in perplexity computation (guarded against `-100`-only label tensors).
 
----
+
 
 ## Evaluation
 
@@ -120,21 +118,6 @@ split, with identical prompts and greedy decoding (`max_new_tokens=512`).
    tuned model assigns higher probability to the *actual* answer text — a proper
    likelihood check, complementary to ROUGE/F1.
 
-**Results** (fill in after final run):
-
-| Metric | Base | Tuned | Δ |
-|---|---|---|---|
-| ROUGE-L | {x} | {x} | {+/-x} |
-| Token F1 | {x} | {x} | {+/-x} |
-| Perplexity | {x} | {x} | {+/-x} |
-
-See `outputs/plots/` for:
-- `loss_curve.png` — training and eval loss over 750 steps
-- `rouge_f1_comparison.png` — bar chart of base vs. tuned
-- `length_vs_rouge.png` — scatter showing where fine-tuning helps most
-  (short snippet answers vs. long explanations)
-
----
 
 ## Why ROUGE-L in the 0.15–0.25 range is not a failure
 
@@ -153,7 +136,6 @@ What matters is the **delta between base and tuned**. If the tuned model wins on
 ROUGE-L and F1 and has lower perplexity on references, the fine-tuning worked — regardless
 of the absolute number.
 
----
 
 ## Limitations and What I'd Do Differently
 
